@@ -6,6 +6,6 @@ namespace BatchProcessor.ProcessorApi.Interfaces.Services
 {
     public interface IBatchService
     {
-        IAsyncEnumerable<Batch> CreateBatch(Guid processId, int numberOfBatches);
+        IAsyncEnumerable<Batch> CreateBatches(Guid processId, int numberOfBatches);
     }
 }

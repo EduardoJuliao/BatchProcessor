@@ -21,7 +21,7 @@ namespace BatchProcessor.ProcessorApi.Services
             _batchRepository = batchRepository ?? throw new ArgumentNullException(nameof(batchRepository));
         }
 
-        public async IAsyncEnumerable<Batch> CreateBatch(Guid processId, int numberOfBatches)
+        public async IAsyncEnumerable<Batch> CreateBatches(Guid processId, int numberOfBatches)
         {
             foreach (var item in Enumerable.Range(0, numberOfBatches))
             {

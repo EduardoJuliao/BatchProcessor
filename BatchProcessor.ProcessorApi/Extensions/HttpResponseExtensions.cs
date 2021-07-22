@@ -10,5 +10,10 @@ namespace BatchProcessor.ProcessorApi.Extensions
             await httpResponse.Body.WriteAsync(utf8DataitemBytes, 0, utf8DataitemBytes.Length);
             await httpResponse.Body.FlushAsync();
         }
+
+        public static void SetEventStreamHeader(this HttpResponse httpResponse)
+        {
+            httpResponse.Headers.Add("Content-Type", "text/event-stream");
+        }
     }
 }
