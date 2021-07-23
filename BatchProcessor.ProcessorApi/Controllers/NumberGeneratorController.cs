@@ -1,12 +1,12 @@
-﻿using BatchProcessor.ProcessorApi.Extensions;
-using BatchProcessor.ProcessorApi.Interfaces.Services;
+﻿using BatchProcessor.ProcessorApi.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using BatchProcessor.Common.Extensions;
 
 namespace BatchProcessor.ProcessorApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/generator")]
     [ApiController]
     public class NumberGeneratorController : ControllerBase
     {
@@ -17,12 +17,12 @@ namespace BatchProcessor.ProcessorApi.Controllers
             _numberGeneratorService = numberGeneratorService ?? throw new ArgumentNullException(nameof(numberGeneratorService));
         }
 
-        [HttpGet("{batchId:guid}/{amountOfNumbers:int:min(0):max(100)}")]
-        public async Task GenerateNumbers(Guid batchId, int amountOfNumbers)
+        [HttpGet("{amountOfNumbers:int:min(0):max(100)}")]
+        public async Task GenerateNumbers(int amountOfNumbers)
         {
             Response.SetEventStreamHeader();
 
-            await foreach (var dataItemBytes in _numberGeneratorService.Generate(batchId, amountOfNumbers).ToHttpResponseDataItem())
+            await foreach (var dataItemBytes in _numberGeneratorService.Generate(amountOfNumbers).ToHttpResponseDataItem())
                 await Response.WriteContentToBody(dataItemBytes);
         }
     }

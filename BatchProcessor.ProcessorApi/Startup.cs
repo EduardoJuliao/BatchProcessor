@@ -1,12 +1,8 @@
-using BatchProcessor.ProcessorApi.Factories;
-using BatchProcessor.ProcessorApi.Interfaces.Factories;
-using BatchProcessor.ProcessorApi.Interfaces.Repository;
 using BatchProcessor.ProcessorApi.Interfaces.Services;
-using BatchProcessor.ProcessorApi.Repository;
+using BatchProcessor.ProcessorApi.Options;
 using BatchProcessor.ProcessorApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,28 +23,15 @@ namespace BatchProcessor.ProcessorApi
         {
             services.AddControllers();
 
-            // Context
-            services.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("BachProcessor"));
-            services.AddTransient<IApplicationContext, ApplicationContext>();
-
             // Services
             services.AddSingleton<IWorkerService, WorkerService>();
             services.AddSingleton<INumberGeneratorService, NumberGeneratorService>();
             services.AddSingleton<INumberMultiplierService, NumberMultiplierService>();
-            services.AddSingleton<IProcessService, ProcessService>();
-            services.AddSingleton<IBatchService, BatchService>();
-            
-            // Repositories
-            services.AddTransient<IProcessRepository, ProcessRepository>();
-            services.AddTransient<IBatchRepository, BatchRepository>();
-            services.AddTransient<INumberRepository, NumberRepository>();
 
-            // Factories
-            services.AddSingleton<IProcessFactory, ProcessFactory>();
-            services.AddSingleton<IBatchFactory, BatchFactory>();
-            services.AddSingleton<INumberFactory, NumberFactory>();
-
-            services.AddMemoryCache();
+            // Options
+            services
+                .AddSingleton(provider => Configuration.GetSection(nameof(NumberGeneratorOptions)).Get<NumberGeneratorOptions>())
+                .AddSingleton(provider => Configuration.GetSection(nameof(NumberMultiplierOptions)).Get<NumberMultiplierOptions>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

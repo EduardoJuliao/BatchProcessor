@@ -1,4 +1,4 @@
-﻿using BatchProcessor.ProcessorApi.Entities;
+﻿using BatchProcessor.ProcessorApi.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -6,6 +6,6 @@ namespace BatchProcessor.ProcessorApi.Interfaces.Services
 {
     public interface INumberMultiplierService
     {
-        Task<Number> Multiply(Guid numberId);
+        Task<int> Multiply(int value);
     }
 }

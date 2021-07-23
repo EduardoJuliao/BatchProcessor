@@ -1,5 +1,4 @@
-﻿using BatchProcessor.ProcessorApi.Entities;
-using BatchProcessor.ProcessorApi.Interfaces.Services;
+﻿using BatchProcessor.ProcessorApi.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -17,8 +16,8 @@ namespace BatchProcessor.ProcessorApi.Controllers
             _numberMultiplierService = numberMultiplierService ?? throw new ArgumentNullException(nameof(numberMultiplierService));
         }
 
-        [HttpGet("{numberId:guid}")]
-        public async Task<Number> GenerateNumbers(Guid numberId)
-            => await _numberMultiplierService.Multiply(numberId);
+        [HttpGet("{value:int}")]
+        public async Task<int> GenerateNumbers(int value)
+            => await _numberMultiplierService.Multiply(value);
     }
 }

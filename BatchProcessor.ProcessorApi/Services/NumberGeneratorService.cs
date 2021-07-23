@@ -1,7 +1,5 @@
-﻿using BatchProcessor.ProcessorApi.Entities;
-using BatchProcessor.ProcessorApi.Interfaces.Factories;
-using BatchProcessor.ProcessorApi.Interfaces.Repository;
-using BatchProcessor.ProcessorApi.Interfaces.Services;
+﻿using BatchProcessor.ProcessorApi.Interfaces.Services;
+using BatchProcessor.ProcessorApi.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,31 +11,26 @@ namespace BatchProcessor.ProcessorApi.Services
         private static readonly Random _random = new Random();
 
         private readonly IWorkerService _processorService;
-        private readonly IBatchRepository _batchRepository;
-        private readonly INumberFactory _numberFactory;
+        private readonly NumberGeneratorOptions _numGenOptions;
 
-        public NumberGeneratorService(IWorkerService processorService, IBatchRepository batchRepository, INumberFactory numberFactory)
+        public NumberGeneratorService(
+            IWorkerService processorService,
+            NumberGeneratorOptions options)
         {
             _processorService = processorService ?? throw new ArgumentNullException(nameof(processorService));
-            _batchRepository = batchRepository ?? throw new ArgumentNullException(nameof(batchRepository));
-            _numberFactory = numberFactory ?? throw new ArgumentNullException(nameof(numberFactory));
+            _numGenOptions = options ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public async IAsyncEnumerable<Number> Generate(Guid batchId, int amount)
+        public async IAsyncEnumerable<int> Generate(int amount)
         {
-            foreach(var number in Enumerable.Range(0, amount).Select(x => new { order = x, value = _random.Next(0, 100) }))
+            var min = _numGenOptions.MinValue;
+            var max = _numGenOptions.MaxValue;
+
+            foreach (var number in Enumerable.Range(0, amount).Select(x => _random.Next(min, max)))
             {
                 await _processorService.Process();
 
-                var newNumber = _numberFactory
-                    .SetOrder(number.order)
-                    .SetValue(number.value)
-                    .SetBatchId(batchId)
-                    .Build();
-
-                await _batchRepository.AddNumberToBatch(newNumber);
-
-                yield return newNumber;
+                yield return number;
             }
         }
     }

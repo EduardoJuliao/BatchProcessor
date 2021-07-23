@@ -1,6 +1,5 @@
-﻿using BatchProcessor.ProcessorApi.Entities;
-using BatchProcessor.ProcessorApi.Interfaces.Repository;
-using BatchProcessor.ProcessorApi.Interfaces.Services;
+﻿using BatchProcessor.ProcessorApi.Interfaces.Services;
+using BatchProcessor.ProcessorApi.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -11,29 +10,26 @@ namespace BatchProcessor.ProcessorApi.Services
         private static readonly Random _random = new Random();
 
         private readonly IWorkerService _processorService;
-        private readonly INumberRepository _numberRepository;
+        private readonly NumberMultiplierOptions _numberMultiplierOptions;
 
         public NumberMultiplierService(
-            IWorkerService processorService, 
-            INumberRepository numberRepository)
+            IWorkerService processorService,
+            NumberMultiplierOptions numberMultiplierOptions)
         {
             _processorService = processorService ?? throw new ArgumentNullException(nameof(processorService));
-            _numberRepository = numberRepository ?? throw new ArgumentNullException(nameof(numberRepository));
+            _numberMultiplierOptions = numberMultiplierOptions ?? throw new ArgumentNullException(nameof(numberMultiplierOptions));
         }
 
-        public async Task<Number> Multiply(Guid numberId)
+        public async Task<int> Multiply(int value)
         {
+            var min = _numberMultiplierOptions.MinValue;
+            var max = _numberMultiplierOptions.MaxValue;
+
             await _processorService.Process();
 
-            var number = await _numberRepository.FindNumber(numberId);
+            var multiplier = _random.Next(min, max);
 
-            var multiplier = _random.Next(2, 4);
-
-            number.Multiplier = multiplier;
-            number.MultipliedValue = number.Value * multiplier;
-
-            return await _numberRepository.UpdateNumber(number);
-
+            return value * multiplier;
         }
     }
 }

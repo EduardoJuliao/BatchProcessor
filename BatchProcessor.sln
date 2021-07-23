@@ -9,9 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. WebApis", "1. WebApis", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Presenter", "2. Presenter", "{1954F123-592E-42FD-8325-491A0C1B3A3A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatchProcessor.ProcessorApi", "BatchProcessor.ProcessorApi\BatchProcessor.ProcessorApi.csproj", "{BC09718A-30F2-4F89-8F1C-4631BF7FD500}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchProcessor.ProcessorApi", "BatchProcessor.ProcessorApi\BatchProcessor.ProcessorApi.csproj", "{BC09718A-30F2-4F89-8F1C-4631BF7FD500}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatchProcessor.WebApp", "BatchProcessor.WebApp\BatchProcessor.WebApp.csproj", "{1C0C7833-BBD0-4954-A0F6-3527F1E5E0AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchProcessor.Common", "BatchProcessor.Common\BatchProcessor.Common.csproj", "{FD34DEFD-5FBA-4244-A0FD-2785D0468F37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{1C0C7833-BBD0-4954-A0F6-3527F1E5E0AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C0C7833-BBD0-4954-A0F6-3527F1E5E0AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C0C7833-BBD0-4954-A0F6-3527F1E5E0AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD34DEFD-5FBA-4244-A0FD-2785D0468F37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD34DEFD-5FBA-4244-A0FD-2785D0468F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD34DEFD-5FBA-4244-A0FD-2785D0468F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD34DEFD-5FBA-4244-A0FD-2785D0468F37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

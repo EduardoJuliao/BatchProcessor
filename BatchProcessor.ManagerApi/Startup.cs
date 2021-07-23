@@ -1,5 +1,12 @@
+using BatchProcessor.ManagerApi.Factories;
+using BatchProcessor.ManagerApi.Interfaces.Factories;
+using BatchProcessor.ManagerApi.Interfaces.Repository;
+using BatchProcessor.ManagerApi.Interfaces.Services;
+using BatchProcessor.ManagerApi.Repository;
+using BatchProcessor.ManagerApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,6 +26,22 @@ namespace BatchProcessor.ManagerApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            // Context
+            services.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("BachProcessor"));
+            services.AddTransient<IApplicationContext, ApplicationContext>();
+
+            services.AddSingleton<IProcessService, ProcessService>();
+            services.AddSingleton<IBatchService, BatchService>();
+
+            // Repositories
+            services.AddTransient<IProcessRepository, ProcessRepository>();
+            services.AddTransient<IBatchRepository, BatchRepository>();
+            services.AddTransient<INumberRepository, NumberRepository>();
+
+            // Factories
+            services.AddSingleton<IProcessFactory, ProcessFactory>();
+            services.AddSingleton<IBatchFactory, BatchFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
