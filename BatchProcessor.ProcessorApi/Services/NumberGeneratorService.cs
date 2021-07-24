@@ -42,7 +42,7 @@ namespace BatchProcessor.ProcessorApi.Services
             var max = _numGenOptions.MaxValue + (_numGenOptions.Inclusive ? 1 : 0);
 
             await _processorService.Process();
-
+            
             return _random.Next(min, max);
         }
     }

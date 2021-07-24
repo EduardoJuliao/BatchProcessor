@@ -4,7 +4,6 @@ using BatchProcessor.Common.Extensions;
 using BatchProcessor.ManagerApi.Interfaces.Services;
 using BatchProcessor.ManagerApi.Mappers;
 using BatchProcessor.ManagerApi.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BatchProcessor.ManagerApi.Controllers
@@ -19,7 +18,7 @@ namespace BatchProcessor.ManagerApi.Controllers
             _processService = processService ?? throw new System.ArgumentNullException(nameof(processService));
         }
 
-        [HttpPost("start/{batchSize:int:min(1):max(10)}/{numbersPerBatch:int:min(1):max(10)}")]
+        [HttpGet("start/{batchSize:int:min(1):max(10)}/{numbersPerBatch:int:min(1):max(10)}")]
         public async Task StartProcess(int batchSize, int numbersPerBatch)
         {
             _processService.OnProcessCreated += async (sender, data) =>
@@ -35,21 +34,20 @@ namespace BatchProcessor.ManagerApi.Controllers
             };
 
             _processService.OnNumberGenerated += async (sender, data) => {
-                var numberBytes = data.Number.Map().ToHttpResponseDataItemBytes("number_generated");
 
-                await Response.WriteContentToBody(numberBytes);
+                await Task.Run(() => Response.WriteContentToBody(data.Number.Map().ToHttpResponseDataItemBytes("number_generated"))
+                    .ConfigureAwait(false));
             };
 
             _processService.OnNumberMultiplied += async (sender, data) =>
             {
-                var numberBytes = data.Number.Map().ToHttpResponseDataItemBytes("number_multiplied");
-
-                await Response.WriteContentToBody(numberBytes);
+                await Task.Run(() => Response.WriteContentToBody(data.Number.Map().ToHttpResponseDataItemBytes("number_multiplied"))
+                    .ConfigureAwait(false));
             };
 
             Response.SetEventStreamHeader();
 
-            var process = await _processService.CreateProcess(batchSize, numbersPerBatch).ConfigureAwait(false);
+            var process = await Task.Run(()=>_processService.StartProcess(batchSize, numbersPerBatch)).ConfigureAwait(false);
 
             await _processService.FinishProcess(process.Id);
          }
@@ -57,7 +55,7 @@ namespace BatchProcessor.ManagerApi.Controllers
         [HttpGet("status/{processId:guid}")]
         public async Task<ProcessModel> GetProcessStatus(Guid processId)
         {
-            return await _processService.GetProcessStatus(processId);
+            return (await _processService.GetProcessStatus(processId)).Map();
         }
     }
 }

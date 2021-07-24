@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq.Expressions;
 using System.Net;
-using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using BatchProcessor.ManagerApi.Entities;
 using BatchProcessor.ManagerApi.Events.Data;
-using BatchProcessor.ManagerApi.Factories;
 using BatchProcessor.ManagerApi.Interfaces.Factories;
 using BatchProcessor.ManagerApi.Interfaces.Managers;
 using BatchProcessor.ManagerApi.Interfaces.Repository;
 using BatchProcessor.ManagerApi.Options;
-using BatchProcessor.ManagerApi.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BatchProcessor.ManagerApi.Managers
@@ -41,7 +36,7 @@ namespace BatchProcessor.ManagerApi.Managers
 
         }
 
-        public async Task Generate(Batch batch)
+        public async Task<Batch> Generate(Batch batch)
         {
             _multiplyManager.OnNumberMultiplied += OnNumberMultiplied;
 
@@ -77,11 +72,13 @@ namespace BatchProcessor.ManagerApi.Managers
                     await _multiplyManager.Multiply(newNumber);
                 }
             }
+
+            return batch;
         }
 
-        public void Generate(Process process)
+        public async Task Generate(Process process)
         {
-            Parallel.ForEach(process.Batches, (batch) => Generate(batch).ConfigureAwait(false).GetAwaiter().GetResult());
+            await Task.Run(() =>  Parallel.ForEach(process.Batches, (batch) => Generate(batch).ConfigureAwait(false).GetAwaiter().GetResult()));
         }
     }
 }

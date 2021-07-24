@@ -1,4 +1,5 @@
-﻿using BatchProcessor.ManagerApi.Events.Data;
+﻿using BatchProcessor.ManagerApi.Entities;
+using BatchProcessor.ManagerApi.Events.Data;
 using BatchProcessor.ManagerApi.Interfaces.Factories;
 using BatchProcessor.ManagerApi.Interfaces.Managers;
 using BatchProcessor.ManagerApi.Interfaces.Repository;
@@ -31,28 +32,21 @@ namespace BatchProcessor.ManagerApi.Services
             _numberManager = numberManager ?? throw new ArgumentNullException(nameof(numberManager));
         }
 
-        public async Task<ProcessModel> CreateProcess(int batchSize, int numberPerBatch)
+        public async Task<Process> StartProcess(int batchSize, int numberPerBatch)
         {
-            var newProcess = _processFactory
-                .SetBatchSize(batchSize)
-                .SetNumberPerBatch(numberPerBatch)
-                .Build();
-
-            await _processRepository.CreateProcess(newProcess);
-
-            OnProcessCreated?.Invoke(this, new ProcessCreatedEventData { Process = newProcess });
+            var newProcess = await CreateProcess(batchSize, numberPerBatch);
 
             _numberManager.OnNumberGenerated += OnNumberGenerated;
             _numberManager.OnNumberMultiplied += OnNumberMultiplied;
 
-            _numberManager.Generate(newProcess);
+            await _numberManager.Generate(newProcess).ConfigureAwait(false);
 
-            return newProcess.Map();
+            return newProcess;
         }
 
-        public async Task<ProcessModel> GetProcessStatus(Guid processId)
+        public async Task<Process> GetProcessStatus(Guid processId)
         {
-            return (await _processRepository.GetProcess(processId)).Map();
+            return (await _processRepository.GetProcess(processId));
         }
 
         public async Task FinishProcess(Guid id)
@@ -64,6 +58,20 @@ namespace BatchProcessor.ManagerApi.Services
             await _processRepository.UpdateProcess(process);
 
             OnProcessFinished?.Invoke(this, new ProcessCreatedEventData { Process = process });
+        }
+
+        public async Task<Process> CreateProcess(int batchSize, int numbersPerBatch)
+        {
+            var newProcess = _processFactory
+                .SetBatchSize(batchSize)
+                .SetNumberPerBatch(numbersPerBatch)
+                .Build();
+
+            await _processRepository.CreateProcess(newProcess);
+
+            OnProcessCreated?.Invoke(this, new ProcessCreatedEventData { Process = newProcess });
+
+            return newProcess;
         }
     }
 }
