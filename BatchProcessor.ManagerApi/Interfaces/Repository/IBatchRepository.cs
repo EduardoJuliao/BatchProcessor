@@ -11,5 +11,7 @@ namespace BatchProcessor.ManagerApi.Interfaces.Repository
         Task<Batch> AddNumberToBatch(Guid batchId, Number newNumber);
 
         Task<Batch> CreateBatch(Batch newBatch);
+
+        Task<Batch> GetBatch(Guid batchId);
     }
 }

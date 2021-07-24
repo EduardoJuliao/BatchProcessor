@@ -1,4 +1,6 @@
-﻿using BatchProcessor.ProcessorApi.Interfaces.Services;
+﻿using BatchProcessor.ProcessorApi.Interfaces.Factories;
+using BatchProcessor.ProcessorApi.Interfaces.Services;
+using BatchProcessor.ProcessorApi.Models;
 using BatchProcessor.ProcessorApi.Options;
 using System;
 using System.Threading.Tasks;
@@ -11,13 +13,16 @@ namespace BatchProcessor.ProcessorApi.Services
 
         private readonly IWorkerService _processorService;
         private readonly NumberMultiplierOptions _numberMultiplierOptions;
+        private readonly INumberFactory _numberFactory;
 
         public NumberMultiplierService(
             IWorkerService processorService,
-            NumberMultiplierOptions numberMultiplierOptions)
+            NumberMultiplierOptions numberMultiplierOptions,
+            INumberFactory numberFactory)
         {
             _processorService = processorService ?? throw new ArgumentNullException(nameof(processorService));
             _numberMultiplierOptions = numberMultiplierOptions ?? throw new ArgumentNullException(nameof(numberMultiplierOptions));
+            _numberFactory = numberFactory;
         }
 
         /// <summary>
@@ -25,7 +30,7 @@ namespace BatchProcessor.ProcessorApi.Services
         /// </summary>
         /// <param name="value">Value to be multiplied</param>
         /// <returns>Multiplied number</returns>
-        public async Task<int> Multiply(int value)
+        public async Task<MultipliedNumberModel> Multiply(int value)
         {
             var min = _numberMultiplierOptions.MinValue;
             var max = _numberMultiplierOptions.MaxValue + (_numberMultiplierOptions.Inclusive ? 1 : 0); ;
@@ -34,7 +39,10 @@ namespace BatchProcessor.ProcessorApi.Services
 
             var multiplier = _random.Next(min, max);
 
-            return value * multiplier;
+            return _numberFactory
+                .SetMultiplier(multiplier)
+                .SetOriginalValue(value)
+                .Build();
         }
     }
 }

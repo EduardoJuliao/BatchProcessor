@@ -17,6 +17,12 @@
     <None Remove="Microsoft.EntityFrameworkCore" />
     <None Remove="Microsoft.EntityFrameworkCore.Relational" />
     <None Remove="Microsoft.EntityFrameworkCore.InMemory" />
+    <None Remove="Managers\" />
+    <None Remove="Options\" />
+    <None Remove="Models\" />
+    <None Remove="Interfaces\Managers\" />
+    <None Remove="Controllers\" />
+    <None Remove="Mappers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repository\" />
@@ -27,6 +33,12 @@
     <Folder Include="Services\" />
     <Folder Include="Factories\" />
     <Folder Include="Entities\" />
+    <Folder Include="Managers\" />
+    <Folder Include="Options\" />
+    <Folder Include="Models\" />
+    <Folder Include="Interfaces\Managers\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Mappers\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />

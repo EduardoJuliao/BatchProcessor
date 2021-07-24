@@ -14,9 +14,13 @@
 
   <ItemGroup>
     <None Remove="Options\" />
+    <None Remove="Factories\" />
+    <None Remove="Interfaces\Factories\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Options\" />
+    <Folder Include="Factories\" />
+    <Folder Include="Interfaces\Factories\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BatchProcessor.Common\BatchProcessor.Common.csproj">

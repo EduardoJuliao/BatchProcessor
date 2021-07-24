@@ -28,13 +28,8 @@ namespace BatchProcessor.ProcessorApi.Services
         /// <returns>A list of newly generated number</returns>
         public async IAsyncEnumerable<int> Generate(int amount)
         {
-            var min = _numGenOptions.MinValue;
-            var max = _numGenOptions.MaxValue + (_numGenOptions.Inclusive ? 1 : 0);
-
             foreach (var number in Enumerable.Range(0, amount).Select(x => Generate()))
             {
-                await _processorService.Process();
-
                 yield return await number;
             }
         }

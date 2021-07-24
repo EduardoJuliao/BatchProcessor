@@ -8,6 +8,7 @@ namespace BatchProcessor.ManagerApi.Factories
     public class BatchFactory : IBatchFactory
     {
         private int Order { get; set; }
+        private int Size { get; set; }
         private Guid ProcessId { get; set; }
 
         public Batch Build()
@@ -16,6 +17,7 @@ namespace BatchProcessor.ManagerApi.Factories
             {
                 Numbers = new List<Number>(),
                 Order = Order,
+                Size = Size,
                 ProcessId = ProcessId
             };
         }
@@ -23,6 +25,12 @@ namespace BatchProcessor.ManagerApi.Factories
         public IBatchFactory SetOrder(int order)
         {
             Order = order;
+            return this;
+        }
+
+        public IBatchFactory SetSize(int size)
+        {
+            Size = size;
             return this;
         }
 

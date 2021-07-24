@@ -43,5 +43,10 @@ namespace BatchProcessor.ManagerApi.Repository
 
             return newBatch;
         }
+
+        public async Task<Batch> GetBatch(Guid batchId)
+        {
+            return await _context.Batches.FindAsync(batchId);
+        }
     }
 }

@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatchProcessor.WebApp", "Ba
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchProcessor.Common", "BatchProcessor.Common\BatchProcessor.Common.csproj", "{FD34DEFD-5FBA-4244-A0FD-2785D0468F37}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.1 WebApi Tests", "1.1 WebApi Tests", "{BA6307F9-A5DB-47B2-8796-DC80396755D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchProcessor.ProcessorApi.Tests", "BatchProcessor.ProcessorApi.Tests\BatchProcessor.ProcessorApi.Tests.csproj", "{8D2E0B5D-7C32-4005-B30E-C7FA4BDC74D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,10 @@ Global
 		{FD34DEFD-5FBA-4244-A0FD-2785D0468F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD34DEFD-5FBA-4244-A0FD-2785D0468F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD34DEFD-5FBA-4244-A0FD-2785D0468F37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D2E0B5D-7C32-4005-B30E-C7FA4BDC74D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D2E0B5D-7C32-4005-B30E-C7FA4BDC74D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2E0B5D-7C32-4005-B30E-C7FA4BDC74D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D2E0B5D-7C32-4005-B30E-C7FA4BDC74D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +53,7 @@ Global
 		{E56B2CAF-3CBA-4A4A-8152-EE0CFDE17EEF} = {944C90F2-B8AA-4763-A452-20E558F9F76D}
 		{BC09718A-30F2-4F89-8F1C-4631BF7FD500} = {944C90F2-B8AA-4763-A452-20E558F9F76D}
 		{1C0C7833-BBD0-4954-A0F6-3527F1E5E0AF} = {1954F123-592E-42FD-8325-491A0C1B3A3A}
+		{8D2E0B5D-7C32-4005-B30E-C7FA4BDC74D4} = {BA6307F9-A5DB-47B2-8796-DC80396755D6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE169A3C-2FA7-4B1F-A879-4C424AAC60C9}

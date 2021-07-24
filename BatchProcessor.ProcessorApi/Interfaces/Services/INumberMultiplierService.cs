@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BatchProcessor.ProcessorApi.Models;
 
 namespace BatchProcessor.ProcessorApi.Interfaces.Services
 {
@@ -9,6 +10,6 @@ namespace BatchProcessor.ProcessorApi.Interfaces.Services
         /// </summary>
         /// <param name="value">Value to be multiplied</param>
         /// <returns>Multiplied number</returns>
-        Task<int> Multiply(int value);
+        Task<MultipliedNumberModel> Multiply(int value);
     }
 }

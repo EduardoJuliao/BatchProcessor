@@ -24,10 +24,10 @@ namespace BatchProcessor.ManagerApi.Repository.Mappings
                 .IsRequired();
 
             builder.Property(x => x.Multiplier)
-                .IsRequired();
+                .IsRequired(false);
 
             builder.Property(x => x.MultipliedValue)
-                .IsRequired();
+                .IsRequired(false);
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using BatchProcessor.ProcessorApi.Interfaces.Services;
+using BatchProcessor.ProcessorApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
 namespace BatchProcessor.ProcessorApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/multiplier")]
     [ApiController]
     public class NumberMultiplierController : ControllerBase
     {
@@ -17,7 +18,7 @@ namespace BatchProcessor.ProcessorApi.Controllers
         }
 
         [HttpGet("{value:int}")]
-        public async Task<int> MultiplyNumber(int value)
+        public async Task<MultipliedNumberModel> MultiplyNumber(int value)
             => await _numberMultiplierService.Multiply(value);
     }
 }

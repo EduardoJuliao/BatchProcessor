@@ -2,6 +2,7 @@
 using BatchProcessor.ManagerApi.Interfaces.Factories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BatchProcessor.ManagerApi.Factories
 {
@@ -9,6 +10,7 @@ namespace BatchProcessor.ManagerApi.Factories
     {
         private int BatchSize { get; set; }
         private int NumbersPerbatch { get; set; }
+        private List<Batch> Batches { get; set; }
 
         public Process Build()
         {
@@ -18,7 +20,7 @@ namespace BatchProcessor.ManagerApi.Factories
                 BatchSize = this.BatchSize,
                 NumbersPerBatch = this.NumbersPerbatch,
                 IsFinished = false,
-                Batches = new List<Batch>()
+                Batches = Batches ?? new List<Batch>()
             };
         }
 
@@ -31,6 +33,13 @@ namespace BatchProcessor.ManagerApi.Factories
         public IProcessFactory SetNumberPerBatch(int numbersPerbatch)
         {
             this.NumbersPerbatch = numbersPerbatch;
+
+            this.Batches = Enumerable.Range(0, numbersPerbatch).Select(x => new Batch
+            {
+                Order = x,
+                Size = numbersPerbatch
+            }).ToList();
+
             return this;
         }
     }

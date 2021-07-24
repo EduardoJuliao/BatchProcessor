@@ -18,21 +18,11 @@ namespace BatchProcessor.ProcessorApi.Controllers
         }
 
         /// <summary>
-        /// Generates one number at the time
-        /// </summary>
-        /// <returns>New generated number</returns>
-        [HttpGet("")]
-        public async Task GenerateNumber()
-        {
-            await _numberGeneratorService.Generate();
-        }
-
-        /// <summary>
         /// Generates a list of numbers
         /// </summary>
         /// <param name="amountOfNumbers">amount of numbers to be generated</param>
         /// <returns>A list of generated numbers</returns>
-        [HttpGet("{amountOfNumbers:int:min(1):max(100)}")]
+        [HttpGet("{amountOfNumbers:int:min(1):max(10)}")]
         public async Task GenerateNumbers(int amountOfNumbers)
         {
             Response.SetEventStreamHeader();
@@ -40,7 +30,5 @@ namespace BatchProcessor.ProcessorApi.Controllers
             await foreach (var dataItemBytes in _numberGeneratorService.Generate(amountOfNumbers).ToHttpResponseDataItem())
                 await Response.WriteContentToBody(dataItemBytes);
         }
-
-        
     }
 }

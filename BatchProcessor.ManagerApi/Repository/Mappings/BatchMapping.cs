@@ -24,6 +24,9 @@ namespace BatchProcessor.ManagerApi.Repository.Mappings
 
             builder.Property(x => x.Order)
                 .IsRequired();
+
+            builder.Property(x => x.Size)
+                .IsRequired();
         }
     }
 }

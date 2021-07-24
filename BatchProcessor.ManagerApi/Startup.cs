@@ -31,8 +31,8 @@ namespace BatchProcessor.ManagerApi
             services.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("BachProcessor"));
             services.AddTransient<IApplicationContext, ApplicationContext>();
 
-            services.AddSingleton<IProcessService, ProcessService>();
-            services.AddSingleton<IBatchService, BatchService>();
+            services.AddTransient<IProcessService, ProcessService>();
+            services.AddTransient<IBatchService, BatchService>();
 
             // Repositories
             services.AddTransient<IProcessRepository, ProcessRepository>();

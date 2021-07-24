@@ -1,3 +1,5 @@
+using BatchProcessor.ProcessorApi.Factories;
+using BatchProcessor.ProcessorApi.Interfaces.Factories;
 using BatchProcessor.ProcessorApi.Interfaces.Services;
 using BatchProcessor.ProcessorApi.Options;
 using BatchProcessor.ProcessorApi.Services;
@@ -27,6 +29,9 @@ namespace BatchProcessor.ProcessorApi
             services.AddSingleton<IWorkerService, WorkerService>();
             services.AddSingleton<INumberGeneratorService, NumberGeneratorService>();
             services.AddSingleton<INumberMultiplierService, NumberMultiplierService>();
+
+            // Factories
+            services.AddTransient<INumberFactory, NumberFactory>();
 
             // Options
             services

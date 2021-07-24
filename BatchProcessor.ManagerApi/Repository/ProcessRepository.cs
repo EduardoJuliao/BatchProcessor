@@ -1,7 +1,9 @@
 ﻿using BatchProcessor.ManagerApi.Entities;
 using BatchProcessor.ManagerApi.Interfaces.Repository;
+using BatchProcessor.ManagerApi.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BatchProcessor.ManagerApi.Repository
@@ -39,6 +41,14 @@ namespace BatchProcessor.ManagerApi.Repository
             await ((DbContext)_context).SaveChangesAsync();
 
             return process;
+        }
+
+        public async Task<Process> GetProcess(Guid processId)
+        {
+            return await _context.Processes
+                .Include(x => x.Batches)
+                .ThenInclude(x => x.Numbers)
+                .SingleAsync(x => x.Id == processId);
         }
     }
 }
