@@ -1,7 +1,10 @@
 using BatchProcessor.ManagerApi.Factories;
 using BatchProcessor.ManagerApi.Interfaces.Factories;
+using BatchProcessor.ManagerApi.Interfaces.Managers;
 using BatchProcessor.ManagerApi.Interfaces.Repository;
 using BatchProcessor.ManagerApi.Interfaces.Services;
+using BatchProcessor.ManagerApi.Managers;
+using BatchProcessor.ManagerApi.Options;
 using BatchProcessor.ManagerApi.Repository;
 using BatchProcessor.ManagerApi.Services;
 using Microsoft.AspNetCore.Builder;
@@ -29,8 +32,12 @@ namespace BatchProcessor.ManagerApi
 
             // Context
             services.AddDbContext<ApplicationContext>(options => options.UseInMemoryDatabase("BachProcessor"));
-            services.AddTransient<IApplicationContext, ApplicationContext>();
+            services.AddScoped<IApplicationContext, ApplicationContext>();
 
+            // Options
+            services.AddSingleton(provider => Configuration.GetSection(nameof(HttpOptions)).Get<HttpOptions>());
+
+            // Services
             services.AddTransient<IProcessService, ProcessService>();
             services.AddTransient<IBatchService, BatchService>();
 
@@ -40,8 +47,13 @@ namespace BatchProcessor.ManagerApi
             services.AddTransient<INumberRepository, NumberRepository>();
 
             // Factories
-            services.AddSingleton<IProcessFactory, ProcessFactory>();
-            services.AddSingleton<IBatchFactory, BatchFactory>();
+            services.AddTransient<IProcessFactory, ProcessFactory>();
+            services.AddTransient<IBatchFactory, BatchFactory>();
+            services.AddTransient<INumberFactory, NumberFactory>();
+
+            // Managers
+            services.AddTransient<INumberManager, NumberManager>();
+            services.AddTransient<IMultiplyManager, MultiplyManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

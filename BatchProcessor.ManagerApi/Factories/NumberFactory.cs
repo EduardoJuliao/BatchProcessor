@@ -14,7 +14,6 @@ namespace BatchProcessor.ManagerApi.Factories
         {
             return new Number
             {
-                BatchId = BatchId,
                 Order = Order,
                 Value = OriginalValue
             };

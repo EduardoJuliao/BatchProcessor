@@ -28,10 +28,8 @@ namespace BatchProcessor.ProcessorApi.Services
         /// <returns>A list of newly generated number</returns>
         public async IAsyncEnumerable<int> Generate(int amount)
         {
-            foreach (var number in Enumerable.Range(0, amount).Select(x => Generate()))
-            {
-                yield return await number;
-            }
+            for (var i = 0; i < amount; i++)
+                yield return await Generate();
         }
 
         /// <summary>

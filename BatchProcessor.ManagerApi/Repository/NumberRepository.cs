@@ -15,16 +15,30 @@ namespace BatchProcessor.ManagerApi.Repository
             _context = context;
         }
 
+        public async Task CreateNumber(Number newNumber)
+        {
+            _context.Numbers.Add(newNumber);
+            await ((DbContext)_context).SaveChangesAsync();
+        }
+
         public async Task<Number> FindNumber(Guid id)
         {
             return await _context.Numbers.FindAsync(id);
         }
 
-        public async Task<Number> UpdateNumber(Number number)
+        public void UpdateNumber(Number number)
+        {
+            lock(_context.Lock)
+            {
+                _context.Numbers.Attach(number);
+                ((DbContext)_context).SaveChanges();
+            }
+        }
+
+        public async Task UpdateNumberAsync(Number number)
         {
             _context.Numbers.Attach(number);
-            await ((DbContext)_context).SaveChangesAsync();
-            return number;
+            await((DbContext)_context).SaveChangesAsync();
         }
     }
 }

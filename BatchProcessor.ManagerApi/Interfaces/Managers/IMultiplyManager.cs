@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BatchProcessor.ManagerApi.Models;
+using BatchProcessor.ManagerApi.Entities;
+using BatchProcessor.ManagerApi.Events.Data;
 
 namespace BatchProcessor.ManagerApi.Interfaces.Managers
 {
     public interface IMultiplyManager
     {
-        Task Multiply(Guid numberId);
+        event EventHandler<NumberMultipliedEventData> OnNumberMultiplied;
+
+        Task Multiply(Number number);
     }
 }

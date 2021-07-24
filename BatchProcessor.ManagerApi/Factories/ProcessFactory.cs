@@ -3,6 +3,7 @@ using BatchProcessor.ManagerApi.Interfaces.Factories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BatchProcessor.ManagerApi.Factories
 {
@@ -37,7 +38,8 @@ namespace BatchProcessor.ManagerApi.Factories
             this.Batches = Enumerable.Range(0, numbersPerbatch).Select(x => new Batch
             {
                 Order = x,
-                Size = numbersPerbatch
+                Size = numbersPerbatch,
+                Numbers = new List<Number>()
             }).ToList();
 
             return this;

@@ -1,60 +1,87 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq.Expressions;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using BatchProcessor.ManagerApi.Entities;
+using BatchProcessor.ManagerApi.Events.Data;
+using BatchProcessor.ManagerApi.Factories;
 using BatchProcessor.ManagerApi.Interfaces.Factories;
 using BatchProcessor.ManagerApi.Interfaces.Managers;
 using BatchProcessor.ManagerApi.Interfaces.Repository;
 using BatchProcessor.ManagerApi.Options;
 using BatchProcessor.ManagerApi.Repository;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BatchProcessor.ManagerApi.Managers
 {
     public class NumberManager : INumberManager
     {
-        private readonly HttpClient _httpClient;
         private readonly HttpOptions _options;
         private readonly IBatchRepository _batchRepository;
-        private readonly INumberFactory _numberfactory;
         private readonly IMultiplyManager _multiplyManager;
+        private readonly IServiceProvider _serviceProvider;
+
+        public event EventHandler<NumberGeneratedEventData> OnNumberGenerated;
+        public event EventHandler<NumberMultipliedEventData> OnNumberMultiplied;
 
         public NumberManager(
             HttpOptions options,
             IBatchRepository batchRepository,
-            INumberFactory numberfactory,
-            IMultiplyManager multiplyManager)
+            IMultiplyManager multiplyManager,
+            IServiceProvider serviceProvider)
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(options.BaseUrl)
-            };
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _batchRepository = batchRepository ?? throw new ArgumentNullException(nameof(batchRepository));
-            _numberfactory = numberfactory ?? throw new ArgumentNullException(nameof(numberfactory));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _multiplyManager = multiplyManager ?? throw new ArgumentNullException(nameof(multiplyManager));
+
         }
 
-        public async Task Generate(Guid batchId)
+        public async Task Generate(Batch batch)
         {
-            var batch = await _batchRepository.GetBatch(batchId);
+            _multiplyManager.OnNumberMultiplied += OnNumberMultiplied;
 
-            Parallel.For(0, batch.Size, async (order) =>
+            if (batch.Numbers == null)
+                batch.Numbers = new List<Number>();
+
+            using var client = new WebClient();
+
+            var _ = await client.OpenReadTaskAsync(new Uri($"{_options.BaseUrl}/{_options.NumberGeneratorEndpoint}/{batch.Size}"))
+                .ConfigureAwait(true);
+
+            using var reader = new StreamReader(_);
+            var order = 0;
+            while (!reader.EndOfStream)
             {
-                var response = await _httpClient.GetAsync(_options.NumberGeneratorEndpoint);
-                var json = await response.Content.ReadAsStringAsync();
-                var value = JsonSerializer.Deserialize<int>(json);
+                var line = reader.ReadLine();
+                if (!string.IsNullOrWhiteSpace(line) && line.StartsWith("generated_number: "))
+                {
+                    order++;
+                    var value = Convert.ToInt32(line.Split(" ")[1]);
 
-                var newNumber = _numberfactory
-                    .SetOrder(order)
-                    .SetOriginalValue(value)
-                    .SetBatchId(batchId)
-                    .Build();
+                    var newNumber = _serviceProvider.GetService<INumberFactory>()
+                        .SetOrder(order)
+                        .SetOriginalValue(value)
+                        .Build();
 
-                await _batchRepository.AddNumberToBatch(newNumber);
+                    batch.Numbers.Add(newNumber);
 
-                new Task(() => _multiplyManager.Multiply(newNumber.Id));
-            });
+                    _batchRepository.UpdateBatch(batch);
+
+                    OnNumberGenerated?.Invoke(this, new NumberGeneratedEventData { Number = newNumber });
+
+                    await _multiplyManager.Multiply(newNumber);
+                }
+            }
+        }
+
+        public void Generate(Process process)
+        {
+            Parallel.ForEach(process.Batches, (batch) => Generate(batch).ConfigureAwait(false).GetAwaiter().GetResult());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BatchProcessor.ManagerApi.Entities;
+﻿using System.Threading.Tasks;
+using BatchProcessor.ManagerApi.Entities;
 
 namespace BatchProcessor.ManagerApi.Interfaces.Factories
 {

@@ -15,24 +15,14 @@ namespace BatchProcessor.ManagerApi.Repository
             _context = context;
         }
 
-        public async Task<Batch> AddNumberToBatch(Guid batchId, Number newNumber)
+        public async Task AddNumberToBatch(Number newNumber)
         {
-            var batch = await _context.Batches.FindAsync(batchId);
+            var batch = _context.Batches.Find(newNumber.BatchId);
             batch.Numbers.Add(newNumber);
 
+            ((DbContext)_context).Update(batch);
             await ((DbContext)_context).SaveChangesAsync();
 
-            return batch;
-        }
-
-        public async Task<Batch> AddNumberToBatch(Number newNumber)
-        {
-            var batch = await _context.Batches.FindAsync(newNumber.BatchId);
-            batch.Numbers.Add(newNumber);
-
-            await ((DbContext)_context).SaveChangesAsync();
-
-            return batch;
         }
 
         public async Task<Batch> CreateBatch(Batch newBatch)
@@ -47,6 +37,21 @@ namespace BatchProcessor.ManagerApi.Repository
         public async Task<Batch> GetBatch(Guid batchId)
         {
             return await _context.Batches.FindAsync(batchId);
+        }
+
+        public void UpdateBatch(Batch batch)
+        {
+            lock(_context.Lock)
+            {
+                _context.Batches.Update(batch);
+                ((DbContext)_context).SaveChanges();
+            }
+        }
+
+        public async Task UpdateBatchAsync(Batch batch)
+        {
+            _context.Batches.Update(batch);
+            await ((DbContext)_context).SaveChangesAsync();
         }
     }
 }

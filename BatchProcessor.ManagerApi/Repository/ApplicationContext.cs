@@ -11,9 +11,14 @@ namespace BatchProcessor.ManagerApi.Repository
         {
         }
 
+
         public DbSet<Process> Processes { get; set; }
         public DbSet<Batch> Batches { get; set; }
         public DbSet<Number> Numbers { get; set; }
+
+        private readonly object _lock = new object();
+
+        public object Lock => _lock;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

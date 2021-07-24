@@ -27,7 +27,7 @@ namespace BatchProcessor.ProcessorApi.Controllers
         {
             Response.SetEventStreamHeader();
 
-            await foreach (var dataItemBytes in _numberGeneratorService.Generate(amountOfNumbers).ToHttpResponseDataItem())
+            await foreach (var dataItemBytes in _numberGeneratorService.Generate(amountOfNumbers).ToHttpResponseDataItem("generated_number"))
                 await Response.WriteContentToBody(dataItemBytes);
         }
     }
