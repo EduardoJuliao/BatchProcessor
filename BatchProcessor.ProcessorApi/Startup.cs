@@ -31,7 +31,8 @@ namespace BatchProcessor.ProcessorApi
             // Options
             services
                 .AddSingleton(provider => Configuration.GetSection(nameof(NumberGeneratorOptions)).Get<NumberGeneratorOptions>())
-                .AddSingleton(provider => Configuration.GetSection(nameof(NumberMultiplierOptions)).Get<NumberMultiplierOptions>());
+                .AddSingleton(provider => Configuration.GetSection(nameof(NumberMultiplierOptions)).Get<NumberMultiplierOptions>())
+                .AddSingleton(provider => Configuration.GetSection(nameof(ProcessOptions)).Get<ProcessOptions>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

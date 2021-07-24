@@ -3,6 +3,7 @@ using BatchProcessor.ProcessorApi.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BatchProcessor.ProcessorApi.Services
 {
@@ -21,17 +22,35 @@ namespace BatchProcessor.ProcessorApi.Services
             _numGenOptions = options ?? throw new ArgumentNullException(nameof(options));
         }
 
+        /// <summary>
+        /// Generates a list of new numbers
+        /// </summary>
+        /// <returns>A list of newly generated number</returns>
         public async IAsyncEnumerable<int> Generate(int amount)
         {
             var min = _numGenOptions.MinValue;
-            var max = _numGenOptions.MaxValue;
+            var max = _numGenOptions.MaxValue + (_numGenOptions.Inclusive ? 1 : 0);
 
-            foreach (var number in Enumerable.Range(0, amount).Select(x => _random.Next(min, max)))
+            foreach (var number in Enumerable.Range(0, amount).Select(x => Generate()))
             {
                 await _processorService.Process();
 
-                yield return number;
+                yield return await number;
             }
+        }
+
+        /// <summary>
+        /// Generates a new number
+        /// </summary>
+        /// <returns>Newly generated number</returns>
+        public async Task<int> Generate()
+        {
+            var min = _numGenOptions.MinValue;
+            var max = _numGenOptions.MaxValue + (_numGenOptions.Inclusive ? 1 : 0);
+
+            await _processorService.Process();
+
+            return _random.Next(min, max);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace BatchProcessor.ProcessorApi.Controllers
         }
 
         [HttpGet("{value:int}")]
-        public async Task<int> GenerateNumbers(int value)
+        public async Task<int> MultiplyNumber(int value)
             => await _numberMultiplierService.Multiply(value);
     }
 }

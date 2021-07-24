@@ -20,10 +20,15 @@ namespace BatchProcessor.ProcessorApi.Services
             _numberMultiplierOptions = numberMultiplierOptions ?? throw new ArgumentNullException(nameof(numberMultiplierOptions));
         }
 
+        /// <summary>
+        /// Multiply a value
+        /// </summary>
+        /// <param name="value">Value to be multiplied</param>
+        /// <returns>Multiplied number</returns>
         public async Task<int> Multiply(int value)
         {
             var min = _numberMultiplierOptions.MinValue;
-            var max = _numberMultiplierOptions.MaxValue;
+            var max = _numberMultiplierOptions.MaxValue + (_numberMultiplierOptions.Inclusive ? 1 : 0); ;
 
             await _processorService.Process();
 
