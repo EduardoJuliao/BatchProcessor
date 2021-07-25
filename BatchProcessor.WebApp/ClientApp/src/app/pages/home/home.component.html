@@ -1,0 +1,9 @@
+<div>
+  <label>Amount of batches</label>
+  <input type="number" [(ngModel)]="amountOfBatches" min="1" max="10" />
+</div>
+<div>
+  <label>Amount of numbers per batch</label>
+  <input [(ngModel)]="amountOfNumbersPerBatch" type="number" min="1" max="10" />
+</div>
+<button (click)="startProcess()" class="button button-primary" [disabled]="processing">Start</button>

@@ -20,7 +20,7 @@ namespace BatchProcessor.ManagerApi.Services
         public event EventHandler<NumberGeneratedEventData> OnNumberGenerated;
         public event EventHandler<NumberMultipliedEventData> OnNumberMultiplied;
         public event EventHandler<ProcessCreatedEventData> OnProcessCreated;
-        public event EventHandler<ProcessCreatedEventData> OnProcessFinished;
+        public event EventHandler<ProcessFinishedEventData> OnProcessFinished;
 
         public ProcessService(
             IProcessRepository processRepository,
@@ -57,7 +57,7 @@ namespace BatchProcessor.ManagerApi.Services
 
             await _processRepository.UpdateProcess(process);
 
-            OnProcessFinished?.Invoke(this, new ProcessCreatedEventData { Process = process });
+            OnProcessFinished?.Invoke(this, new ProcessFinishedEventData { Process = process });
         }
 
         public async Task<Process> CreateProcess(int batchSize, int numbersPerBatch)

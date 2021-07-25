@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BatchProcessor.Common.Extensions;
+using BatchProcessor.ManagerApi.Events.Data;
 using BatchProcessor.ManagerApi.Interfaces.Services;
 using BatchProcessor.ManagerApi.Mappers;
 using BatchProcessor.ManagerApi.Models;
@@ -21,29 +22,10 @@ namespace BatchProcessor.ManagerApi.Controllers
         [HttpGet("start/{batchSize:int:min(1):max(10)}/{numbersPerBatch:int:min(1):max(10)}")]
         public async Task StartProcess(int batchSize, int numbersPerBatch)
         {
-            _processService.OnProcessCreated += async (sender, data) =>
-            {
-                await Task.Run(() => Response.WriteContentToBody(data.Process.Map().ToHttpResponseDataItemBytes("process_started"))
-                    .ConfigureAwait(false));
-            };
-
-            _processService.OnProcessFinished += async (sender, data) =>
-            {
-                await Task.Run(() => Response.WriteContentToBody(data.Process.Map().ToHttpResponseDataItemBytes("process_finished"))
-                    .ConfigureAwait(false));
-            };
-
-            _processService.OnNumberGenerated += async (sender, data) => {
-
-                await Task.Run(() => Response.WriteContentToBody(data.Number.Map().ToHttpResponseDataItemBytes("number_generated"))
-                    .ConfigureAwait(false));
-            };
-
-            _processService.OnNumberMultiplied += async (sender, data) =>
-            {
-                await Task.Run(() => Response.WriteContentToBody(data.Number.Map().ToHttpResponseDataItemBytes("number_multiplied"))
-                    .ConfigureAwait(false));
-            };
+            _processService.OnProcessCreated += OnProcessCreated;
+            _processService.OnProcessFinished += OnProcessCompleted;
+            _processService.OnNumberGenerated += OnNumberGenerated;
+            _processService.OnNumberMultiplied += OnNumberMultiplied;
 
             Response.SetEventStreamHeader();
 
@@ -56,6 +38,31 @@ namespace BatchProcessor.ManagerApi.Controllers
         public async Task<ProcessModel> GetProcessStatus(Guid processId)
         {
             return (await _processService.GetProcessStatus(processId)).Map();
+        }
+
+
+        private async void OnProcessCreated(object sender, ProcessCreatedEventData data)
+        {
+            await Task.Run(() => Response.WriteContentToBody(data.Process.Map().ToHttpResponseDataItemBytes("process_started"))
+                    .ConfigureAwait(false));
+        }
+
+        private async void OnProcessCompleted(object sender, ProcessFinishedEventData data)
+        {
+            await Task.Run(() => Response.WriteContentToBody(data.Process.Map().ToHttpResponseDataItemBytes("process_finished"))
+                    .ConfigureAwait(false));
+        }
+
+        private async void OnNumberGenerated(object sender, NumberGeneratedEventData data)
+        {
+            await Task.Run(() => Response.WriteContentToBody(data.Number.Map().ToHttpResponseDataItemBytes("number_generated"))
+                    .ConfigureAwait(false));
+        }
+
+        private async void OnNumberMultiplied(object sender, NumberMultipliedEventData data)
+        {
+            await Task.Run(() => Response.WriteContentToBody(data.Number.Map().ToHttpResponseDataItemBytes("number_multiplied"))
+                    .ConfigureAwait(false));
         }
     }
 }

@@ -14,3 +14,42 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+input[type=number],
+select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=number]:hover {
+  border-color: #45a049;
+}
+
+.button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+.button:hover {
+  cursor: pointer;
+}
+
+.button:disabled {
+  cursor: progress;
+  background-color: #ccc;
+}
+
+.button-primary {
+  background-color: #4CAF50;
+}

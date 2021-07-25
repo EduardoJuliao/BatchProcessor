@@ -54,11 +54,22 @@ namespace BatchProcessor.ManagerApi
             // Managers
             services.AddTransient<INumberManager, NumberManager>();
             services.AddTransient<IMultiplyManager, MultiplyManager>();
+
+            services.AddCors(options =>
+            {
+                // FOR DEVELOPMENT ONLY
+                options.AddPolicy("AllowAllOrigins",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("AllowAllOrigins");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

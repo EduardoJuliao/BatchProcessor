@@ -16,7 +16,7 @@ namespace BatchProcessor.ManagerApi.Interfaces.Services
         event EventHandler<NumberGeneratedEventData> OnNumberGenerated;
         event EventHandler<NumberMultipliedEventData> OnNumberMultiplied;
         event EventHandler<ProcessCreatedEventData> OnProcessCreated;
-        event EventHandler<ProcessCreatedEventData> OnProcessFinished;
+        event EventHandler<ProcessFinishedEventData> OnProcessFinished;
 
         
     }
