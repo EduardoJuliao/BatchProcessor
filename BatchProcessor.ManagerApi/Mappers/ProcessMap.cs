@@ -11,7 +11,7 @@ namespace BatchProcessor.ManagerApi.Mappers
         {
             if (process == null)
                 return null;
-
+            
             return new ProcessModel
             {
                 BatchSize = process.BatchSize,

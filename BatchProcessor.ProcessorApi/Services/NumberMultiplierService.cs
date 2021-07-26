@@ -2,6 +2,7 @@
 using BatchProcessor.ProcessorApi.Interfaces.Services;
 using BatchProcessor.ProcessorApi.Models;
 using BatchProcessor.ProcessorApi.Options;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -14,15 +15,18 @@ namespace BatchProcessor.ProcessorApi.Services
         private readonly IWorkerService _processorService;
         private readonly NumberMultiplierOptions _numberMultiplierOptions;
         private readonly INumberFactory _numberFactory;
+        private readonly ILogger<NumberMultiplierService> _logger;
 
         public NumberMultiplierService(
             IWorkerService processorService,
             NumberMultiplierOptions numberMultiplierOptions,
-            INumberFactory numberFactory)
+            INumberFactory numberFactory,
+            ILogger<NumberMultiplierService> logger)
         {
             _processorService = processorService ?? throw new ArgumentNullException(nameof(processorService));
             _numberMultiplierOptions = numberMultiplierOptions ?? throw new ArgumentNullException(nameof(numberMultiplierOptions));
-            _numberFactory = numberFactory;
+            _numberFactory = numberFactory ?? throw new ArgumentNullException(nameof(numberFactory));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
@@ -32,6 +36,7 @@ namespace BatchProcessor.ProcessorApi.Services
         /// <returns>Multiplied number</returns>
         public async Task<MultipliedNumberModel> Multiply(int value)
         {
+            _logger.LogInformation("Starting number multiply process.");
             var min = _numberMultiplierOptions.MinValue;
             var max = _numberMultiplierOptions.MaxValue + (_numberMultiplierOptions.Inclusive ? 1 : 0); ;
 
@@ -39,10 +44,16 @@ namespace BatchProcessor.ProcessorApi.Services
 
             var multiplier = _random.Next(min, max);
 
-            return _numberFactory
+            var multipliedNumber = _numberFactory
                 .SetMultiplier(multiplier)
                 .SetOriginalValue(value)
                 .Build();
+
+            _logger.LogInformation("Number {numberValue} multiplied to {numberMultiplied}.",
+                multipliedNumber.OriginalValue,
+                multipliedNumber.MultipliedValue);
+
+            return multipliedNumber;
         }
     }
 }

@@ -10,6 +10,7 @@ using BatchProcessor.ManagerApi.Interfaces.Managers;
 using BatchProcessor.ManagerApi.Interfaces.Repository;
 using BatchProcessor.ManagerApi.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace BatchProcessor.ManagerApi.Managers
 {
@@ -19,6 +20,7 @@ namespace BatchProcessor.ManagerApi.Managers
         private readonly IBatchRepository _batchRepository;
         private readonly IMultiplyManager _multiplyManager;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<NumberManager> _logger;
 
         public event EventHandler<NumberGeneratedEventData> OnNumberGenerated;
         public event EventHandler<NumberMultipliedEventData> OnNumberMultiplied;
@@ -27,17 +29,19 @@ namespace BatchProcessor.ManagerApi.Managers
             HttpOptions options,
             IBatchRepository batchRepository,
             IMultiplyManager multiplyManager,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            ILogger<NumberManager> logger)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _batchRepository = batchRepository ?? throw new ArgumentNullException(nameof(batchRepository));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _multiplyManager = multiplyManager ?? throw new ArgumentNullException(nameof(multiplyManager));
-
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<Batch> Generate(Batch batch)
         {
+            _logger.LogInformation("Starting number generation for batch {batchId}", batch.Id);
             _multiplyManager.OnNumberMultiplied += OnNumberMultiplied;
 
             if (batch.Numbers == null)
@@ -52,24 +56,37 @@ namespace BatchProcessor.ManagerApi.Managers
             var order = 0;
             while (!reader.EndOfStream)
             {
-                var line = reader.ReadLine();
-                if (!string.IsNullOrWhiteSpace(line) && line.StartsWith("generated_number: "))
+                try
                 {
-                    order++;
-                    var value = Convert.ToInt32(line.Split(" ")[1]);
+                    var line = reader.ReadLine();
+                    if (!string.IsNullOrWhiteSpace(line) && line.StartsWith("generated_number: "))
+                    {
 
-                    var newNumber = _serviceProvider.GetService<INumberFactory>()
-                        .SetOrder(order)
-                        .SetOriginalValue(value)
-                        .Build();
+                        order++;
+                        var value = Convert.ToInt32(line.Split(" ")[1]);
 
-                    batch.Numbers.Add(newNumber);
+                        _logger.LogInformation("Number {newNumber} in order {order} generated for batch {batchId}", value, order, batch.Id);
 
-                    _batchRepository.UpdateBatch(batch);
+                        var newNumber = _serviceProvider.GetService<INumberFactory>()
+                            .SetOrder(order)
+                            .SetOriginalValue(value)
+                            .Build();
 
-                     OnNumberGenerated?.Invoke(this, new NumberGeneratedEventData { Number = newNumber });
+                        batch.Numbers.Add(newNumber);
 
-                    await _multiplyManager.Multiply(newNumber);
+                        _batchRepository.UpdateBatch(batch);
+
+                        _logger.LogInformation("Updated batch {batchId} with number generated with id {numberId}", batch.Id, newNumber.Id);
+
+                        OnNumberGenerated?.Invoke(this, new NumberGeneratedEventData { Number = newNumber });
+
+                        _logger.LogInformation("Starting the process for multiply the number {numberValue} in batch {batchId}", newNumber.Value, batch.Id);
+                        await _multiplyManager.Multiply(newNumber);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "an error occured while reading responses from the api.");
                 }
             }
 
