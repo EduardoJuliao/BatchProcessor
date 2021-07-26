@@ -54,12 +54,17 @@ namespace BatchProcessor.ManagerApi.Repository
         public async Task<Process> GetLastOrRecent()
         {
             if (await _context.Processes.CountAsync(x => x.IsFinished) == 1)
-                return await _context.Processes.SingleAsync(x => x.IsFinished);
+                return await _context.Processes
+                    .Include(x => x.Batches)
+                    .ThenInclude(x => x.Numbers)
+                    .SingleOrDefaultAsync(x => x.IsFinished);
 
             return await _context.Processes
+                .Include(x => x.Batches)
+                .ThenInclude(x => x.Numbers)
                 .Where(x => x.IsFinished)
                 .OrderByDescending(x => x.FinishedAt)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
         }
     }
 }

@@ -9,6 +9,9 @@ namespace BatchProcessor.ManagerApi.Mappers
     {
         public static ProcessModel Map(this Process process)
         {
+            if (process == null)
+                return null;
+
             return new ProcessModel
             {
                 BatchSize = process.BatchSize,

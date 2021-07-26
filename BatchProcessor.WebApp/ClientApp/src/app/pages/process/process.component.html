@@ -7,3 +7,6 @@
   <input [(ngModel)]="amountOfNumbersPerBatch" type="number" min="1" max="10" />
 </div>
 <button (click)="startProcess()" class="button button-primary" [disabled]="processing">Start</button>
+
+
+<app-process *ngIf="process != undefined" [process-data]="process"></app-process>

@@ -1,0 +1,15 @@
+<h3>Process: {{process.id}}</h3>
+<table>
+  <thead>
+    <tr>
+      <td>Batch</td>
+      <td>Remaining numbers to process</td>
+      <td>Sum</td>
+    </tr>
+    <tr *ngFor="let batch of process.batches">
+      <td>{{batch.order + 1}}</td>
+      <td>{{batch.remainingNumbers}}</td>
+      <td>{{batch.sum}}</td>
+    </tr>
+  </thead>
+</table>

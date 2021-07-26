@@ -1,0 +1,6 @@
+<div *ngIf="processing">
+  loading...
+</div>
+
+<app-process *ngIf="process != undefined && !processing" [process-data]="process"></app-process>
+<h3 *ngIf="process == undefined && !processing">No process found</h3>

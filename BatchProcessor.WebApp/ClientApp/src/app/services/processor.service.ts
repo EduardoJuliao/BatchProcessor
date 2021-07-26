@@ -1,16 +1,34 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from "rxjs";
+import { ProcessModel } from '../models/process.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProcessorService {
-   constructor() { }
+   constructor(private http: HttpClient, @Inject('API_URL') private baseUrl: string) { }
 
-   createProcess() {
-
+   async createProcess(amountOfBatches: number, amountOfNumbersPerBatch: number): Promise<any> {
+      return await this.http
+         .post(`${this.baseUrl}/api/process/create/${amountOfBatches}/${amountOfNumbersPerBatch}`, {})
+         .toPromise();
    }
 
-   public getLastProcess() {
+   async getLastProcess(): Promise<any> {
+      return await this.http
+         .get(`${this.baseUrl}/api/process/last`)
+         .toPromise();
+   }
 
+   async queueProcess(processId: string): Promise<any> {
+      return await this.http
+         .post(`${this.baseUrl}/api/process/queue/${processId}`, {})
+         .toPromise();
+   }
+
+   async getStatus(processId: string): Promise<any> {
+      return await this.http
+         .get(`${this.baseUrl}/api/process/status/${processId}`)
+         .toPromise();
    }
 
    public startProcess(amountOfBatches: number, amountOfNumbersPerBatch: number): Observable<any> {
