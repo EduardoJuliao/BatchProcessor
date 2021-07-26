@@ -89,5 +89,10 @@ namespace BatchProcessor.ManagerApi.Services
 
             await _numberManager.Generate(process);
         }
+
+        public async Task<Process> GetLastProcess()
+        {
+            return await _processRepository.GetLastOrRecent();
+        }
     }
 }

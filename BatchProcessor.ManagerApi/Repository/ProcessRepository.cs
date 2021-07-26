@@ -50,5 +50,16 @@ namespace BatchProcessor.ManagerApi.Repository
                 .ThenInclude(x => x.Numbers)
                 .SingleAsync(x => x.Id == processId);
         }
+
+        public async Task<Process> GetLastOrRecent()
+        {
+            if (await _context.Processes.CountAsync(x => x.IsFinished) == 1)
+                return await _context.Processes.SingleAsync(x => x.IsFinished);
+
+            return await _context.Processes
+                .Where(x => x.IsFinished)
+                .OrderByDescending(x => x.FinishedAt)
+                .FirstAsync();
+        }
     }
 }

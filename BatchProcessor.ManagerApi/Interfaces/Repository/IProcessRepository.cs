@@ -11,5 +11,6 @@ namespace BatchProcessor.ManagerApi.Interfaces.Repository
         Task<Process> AddBatchToProcess(Guid processId, Batch newBatch);
         Task<Process> UpdateProcess(Process process);
         Task<Process> GetProcess(Guid processId);
+        Task<Process> GetLastOrRecent();
     }
 }

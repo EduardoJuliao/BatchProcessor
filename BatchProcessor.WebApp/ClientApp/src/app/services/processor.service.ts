@@ -5,6 +5,14 @@ import { Observable } from "rxjs";
 export class ProcessorService {
    constructor() { }
 
+   createProcess() {
+
+   }
+
+   public getLastProcess() {
+
+   }
+
    public startProcess(amountOfBatches: number, amountOfNumbersPerBatch: number): Observable<any> {
       return new Observable<string>((observer) => {
          const url = `https://localhost:5001/api/process/start/${amountOfBatches}/${amountOfNumbersPerBatch}`;

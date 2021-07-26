@@ -54,6 +54,11 @@ namespace BatchProcessor.ManagerApi.Controllers
             return (await _processService.GetProcessStatus(processId)).Map();
         }
 
+        [HttpGet("last")]
+        public async Task<ProcessModel> GetLastProcess()
+        {
+            return (await _processService.GetLastProcess()).Map();
+        }
 
         private async void OnProcessCreated(object sender, ProcessCreatedEventData data)
         {

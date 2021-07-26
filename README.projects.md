@@ -40,6 +40,10 @@ page.
 
 This is the Api that the Web Application will connect to.
 
+This Api is in charge of managing the user request to process
+a new batch.
+
+
 
 
 ### Batch Processor Processor Api
