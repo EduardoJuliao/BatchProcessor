@@ -43,8 +43,18 @@ This is the Api that the Web Application will connect to.
 This Api is in charge of managing the user request to process
 a new batch.
 
+The api can handle the process in two ways, with `Server Sent Events` and
+using a `Background worker`.
 
+#### Server sent events
 
+Using Server sent events (SSE), the web api will write to the response
+on every update from the process.
+
+#### Background worker
+
+With the background worker, the client can call a separate endpoint
+to get the last status from a particular batch or process.
 
 ### Batch Processor Processor Api
 
