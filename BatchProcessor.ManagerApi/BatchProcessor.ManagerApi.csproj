@@ -26,6 +26,7 @@
     <None Remove="Events\" />
     <None Remove="Events\Handlers\" />
     <None Remove="Events\Data\" />
+    <None Remove="HostedServices\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repository\" />
@@ -45,6 +46,7 @@
     <Folder Include="Events\" />
     <Folder Include="Events\Handlers\" />
     <Folder Include="Events\Data\" />
+    <Folder Include="HostedServices\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />

@@ -67,7 +67,7 @@ namespace BatchProcessor.ManagerApi.Managers
 
                     _batchRepository.UpdateBatch(batch);
 
-                    OnNumberGenerated?.Invoke(this, new NumberGeneratedEventData { Number = newNumber });
+                     OnNumberGenerated?.Invoke(this, new NumberGeneratedEventData { Number = newNumber });
 
                     await _multiplyManager.Multiply(newNumber);
                 }

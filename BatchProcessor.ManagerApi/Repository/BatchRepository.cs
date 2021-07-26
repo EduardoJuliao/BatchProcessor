@@ -36,7 +36,9 @@ namespace BatchProcessor.ManagerApi.Repository
 
         public async Task<Batch> GetBatch(Guid batchId)
         {
-            return await _context.Batches.FindAsync(batchId);
+            return await _context.Batches
+                .Include(x => x.Numbers)
+                .SingleAsync(x => x.Id == batchId);
         }
 
         public void UpdateBatch(Batch batch)

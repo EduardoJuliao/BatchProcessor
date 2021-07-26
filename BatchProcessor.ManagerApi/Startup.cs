@@ -1,4 +1,5 @@
 using BatchProcessor.ManagerApi.Factories;
+using BatchProcessor.ManagerApi.HostedServices;
 using BatchProcessor.ManagerApi.Interfaces.Factories;
 using BatchProcessor.ManagerApi.Interfaces.Managers;
 using BatchProcessor.ManagerApi.Interfaces.Repository;
@@ -38,13 +39,14 @@ namespace BatchProcessor.ManagerApi
             services.AddSingleton(provider => Configuration.GetSection(nameof(HttpOptions)).Get<HttpOptions>());
 
             // Services
-            services.AddTransient<IProcessService, ProcessService>();
-            services.AddTransient<IBatchService, BatchService>();
+            services.AddScoped<IProcessService, ProcessService>();
+            services.AddScoped<IBatchService, BatchService>();
+            services.AddSingleton<IProcessQueueService, ProcessQueueService>();
 
             // Repositories
-            services.AddTransient<IProcessRepository, ProcessRepository>();
-            services.AddTransient<IBatchRepository, BatchRepository>();
-            services.AddTransient<INumberRepository, NumberRepository>();
+            services.AddScoped<IProcessRepository, ProcessRepository>();
+            services.AddScoped<IBatchRepository, BatchRepository>();
+            services.AddScoped<INumberRepository, NumberRepository>();
 
             // Factories
             services.AddTransient<IProcessFactory, ProcessFactory>();
@@ -52,8 +54,10 @@ namespace BatchProcessor.ManagerApi
             services.AddTransient<INumberFactory, NumberFactory>();
 
             // Managers
-            services.AddTransient<INumberManager, NumberManager>();
-            services.AddTransient<IMultiplyManager, MultiplyManager>();
+            services.AddScoped<INumberManager, NumberManager>();
+            services.AddScoped<IMultiplyManager, MultiplyManager>();
+
+            services.AddHostedService<ProcessHostedService>();
 
             services.AddCors(options =>
             {

@@ -16,7 +16,7 @@ namespace BatchProcessor.ManagerApi.Mappers
                 Numbers = batch.Numbers?.Select(x => x.Map()).ToList(),
                 Order = batch.Order,
                 ProcessId = batch.ProcessId,
-                Size = batch.Size
+                Size = batch.Size,
             };
         }
     }

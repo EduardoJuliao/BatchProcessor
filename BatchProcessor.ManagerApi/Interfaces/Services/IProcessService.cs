@@ -18,6 +18,7 @@ namespace BatchProcessor.ManagerApi.Interfaces.Services
         event EventHandler<ProcessCreatedEventData> OnProcessCreated;
         event EventHandler<ProcessFinishedEventData> OnProcessFinished;
 
-        
+        void QueueProcess(Guid processId);
+        Task StartProcess(Guid processId);
     }
 }

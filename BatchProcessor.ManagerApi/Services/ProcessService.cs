@@ -6,6 +6,7 @@ using BatchProcessor.ManagerApi.Interfaces.Repository;
 using BatchProcessor.ManagerApi.Interfaces.Services;
 using BatchProcessor.ManagerApi.Mappers;
 using BatchProcessor.ManagerApi.Models;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ namespace BatchProcessor.ManagerApi.Services
         private readonly IProcessRepository _processRepository;
         private readonly IProcessFactory _processFactory;
         private readonly INumberManager _numberManager;
+        private readonly IProcessQueueService _processQueueService;
 
         public event EventHandler<NumberGeneratedEventData> OnNumberGenerated;
         public event EventHandler<NumberMultipliedEventData> OnNumberMultiplied;
@@ -25,11 +27,13 @@ namespace BatchProcessor.ManagerApi.Services
         public ProcessService(
             IProcessRepository processRepository,
             IProcessFactory processFactory,
-            INumberManager numberManager)
+            INumberManager numberManager,
+            IProcessQueueService processQueueService)
         {
             _processRepository = processRepository ?? throw new ArgumentNullException(nameof(processRepository));
             _processFactory = processFactory ?? throw new ArgumentNullException(nameof(processFactory));
             _numberManager = numberManager ?? throw new ArgumentNullException(nameof(numberManager));
+            _processQueueService = processQueueService;
         }
 
         public async Task<Process> StartProcess(int batchSize, int numberPerBatch)
@@ -72,6 +76,18 @@ namespace BatchProcessor.ManagerApi.Services
             OnProcessCreated?.Invoke(this, new ProcessCreatedEventData { Process = newProcess });
 
             return newProcess;
+        }
+
+        public void QueueProcess(Guid processId)
+        {
+            _processQueueService.AddProcessToQueue(processId);
+        }
+
+        public async Task StartProcess(Guid processId)
+        {
+            var process = await _processRepository.GetProcess(processId);
+
+            await _numberManager.Generate(process);
         }
     }
 }

@@ -5,6 +5,7 @@ using BatchProcessor.ManagerApi.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BatchProcessor.ManagerApi.Services
 {
@@ -32,6 +33,11 @@ namespace BatchProcessor.ManagerApi.Services
 
                 yield return await _batchRepository.CreateBatch(newBatch);
             }
+        }
+
+        public async Task<Batch> GetStatus(Guid batchId)
+        {
+            return await _batchRepository.GetBatch(batchId);
         }
     }
 }

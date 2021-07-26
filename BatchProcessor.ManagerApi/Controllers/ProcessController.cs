@@ -34,6 +34,20 @@ namespace BatchProcessor.ManagerApi.Controllers
             await _processService.FinishProcess(process.Id);
          }
 
+        [HttpPost("create/{batchSize:int:min(1):max(10)}/{numbersPerBatch:int:min(1):max(10)}")]
+        public async Task<ProcessModel> CreateProcess(int batchSize, int numbersPerBatch)
+        {
+            return (await _processService.CreateProcess(batchSize, numbersPerBatch)).Map();
+        }
+
+        [HttpPost("queue/{processId:Guid}")]
+        public  OkObjectResult QueueProcess(Guid processId)
+        {
+            _processService.QueueProcess(processId);
+
+            return new OkObjectResult(new { acknowledged = true });
+        }
+
         [HttpGet("status/{processId:guid}")]
         public async Task<ProcessModel> GetProcessStatus(Guid processId)
         {
