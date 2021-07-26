@@ -5,8 +5,7 @@ namespace BatchProcessor.ManagerApi.Interfaces.Factories
 {
     public interface IProcessFactory
     {
-        IProcessFactory SetBatchSize(int batchSize);
-        IProcessFactory SetNumberPerBatch(int numberAmount);
+        IProcessFactory SetAmountOfBatches(int batchSize, int amountOfNumbers);
         Process Build();
     }
 }

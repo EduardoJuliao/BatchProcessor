@@ -73,8 +73,7 @@ namespace BatchProcessor.ManagerApi.Services
                 numbersPerBatch);
 
             var newProcess = _processFactory
-                .SetBatchSize(batchSize)
-                .SetNumberPerBatch(numbersPerBatch)
+                .SetAmountOfBatches(batchSize, numbersPerBatch)
                 .Build();
 
             await _processRepository.CreateProcess(newProcess);

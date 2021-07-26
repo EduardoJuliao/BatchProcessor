@@ -25,23 +25,16 @@ namespace BatchProcessor.ManagerApi.Factories
             };
         }
 
-        public IProcessFactory SetBatchSize(int batchSize)
+        public IProcessFactory SetAmountOfBatches(int batchSize, int numbersPerBatch)
         {
             this.BatchSize = batchSize;
 
             this.Batches = Enumerable.Range(0, batchSize).Select(x => new Batch
             {
                 Order = x,
-                Size = batchSize,
+                Size = numbersPerBatch,
                 Numbers = new List<Number>()
             }).ToList();
-
-            return this;
-        }
-
-        public IProcessFactory SetNumberPerBatch(int numbersPerbatch)
-        {
-            this.NumbersPerbatch = numbersPerbatch;
 
             return this;
         }

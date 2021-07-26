@@ -14,12 +14,7 @@ namespace BatchProcessor.ProcessorApi.Tests.ServiceTests
         [SetUp]
         public void Setup()
         {
-            _service = new NumberGeneratorService(new WorkerServiceMoq(), new Options.NumberGeneratorOptions
-            {
-                Inclusive = true,
-                MaxValue = 100,
-                MinValue = 1
-            });
+            
         }
 
         [Test]
