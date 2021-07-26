@@ -3,12 +3,14 @@
   <thead>
     <tr>
       <td>Batch</td>
-      <td>Remaining numbers to process</td>
+      <td *ngIf="showRemaining">Remaining numbers to process</td>
+      <td *ngIf="showProcessed">Numbers Processed</td>
       <td>Sum</td>
     </tr>
     <tr *ngFor="let batch of process.batches">
       <td>{{batch.order + 1}}</td>
-      <td>{{batch.remainingNumbers}}</td>
+      <td *ngIf="showRemaining">{{batch.remainingNumbers}}</td>
+      <td *ngIf="showProcessed">{{batch.processedNumbers}}</td>
       <td>{{batch.sum}}</td>
     </tr>
   </thead>

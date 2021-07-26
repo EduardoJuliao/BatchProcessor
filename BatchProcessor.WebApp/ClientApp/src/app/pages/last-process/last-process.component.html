@@ -2,5 +2,6 @@
   loading...
 </div>
 
-<app-process *ngIf="process != undefined && !processing" [process-data]="process"></app-process>
+<app-process *ngIf="process != undefined && !processing" [process-data]="process" [show-remaining]="false"
+  [show-processed]="true"></app-process>
 <h3 *ngIf="process == undefined && !processing">No process found</h3>

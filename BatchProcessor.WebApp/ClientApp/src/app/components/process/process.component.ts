@@ -11,6 +11,11 @@ export class ProcessComponent implements OnInit {
   @Input('process-data')
   process: ProcessModel;
 
+  @Input('show-remaining')
+  showRemaining: boolean = true;
+
+  @Input('show-processed')
+  showProcessed: boolean = false;
   constructor() { }
 
   ngOnInit() {
